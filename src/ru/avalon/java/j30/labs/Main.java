@@ -1,6 +1,7 @@
 package ru.avalon.java.j30.labs;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Properties;
@@ -22,6 +23,8 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws SQLException {
+        getProperties();
+        
         /*
          * TODO #01 Подключите к проекту все библиотеки, необходимые для соединения с СУБД.
          */
@@ -31,6 +34,10 @@ public class Main {
             printAllCodes(connection);
 
             code.setCode("MV");
+            code.save(connection);
+            printAllCodes(connection);
+            
+            code.setDescription("ttttt");
             code.save(connection);
             printAllCodes(connection);
         }
@@ -59,7 +66,7 @@ public class Main {
         /*
          * TODO #02 Реализуйте метод getUrl
          */
-        throw new UnsupportedOperationException("Not implemented yet!");
+        return "jdbc:derby://localhost:1527/sample";
     }
     /**
      * Возвращает параметры соединения
@@ -71,7 +78,17 @@ public class Main {
         /*
          * TODO #03 Реализуйте метод getProperties
          */
-        throw new UnsupportedOperationException("Not implemented yet!");
+        Properties conn = new Properties();
+        conn.setProperty("login", "app");
+        conn.setProperty("pwd", "app");
+        /*try{
+            FileInputStream  fis = new FileInputStream("connectionData.properties");
+            conn.load(fis);      
+        }
+        catch (IOException e){
+            System.err.println("there is no config file");
+        }  */
+            return conn;    
     }
     /**
      * Возвращает соединение с базой данных Sample
@@ -79,11 +96,15 @@ public class Main {
      * @return объект типа {@link Connection}
      * @throws SQLException 
      */
-    private static Connection getConnection() throws SQLException {
+    private static Connection getConnection() throws SQLException {        
+        String url = getUrl();
+        Properties conn = getProperties();
+        String user = conn.getProperty("pwd");
+        String password = conn.getProperty("login");
+        return DriverManager.getConnection(url, user, password);
         /*
          * TODO #04 Реализуйте метод getConnection
          */
-        throw new UnsupportedOperationException("Not implemented yet!");
     }
     
 }
